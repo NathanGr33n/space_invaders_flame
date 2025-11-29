@@ -1,9 +1,12 @@
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
+import '../components/player.dart';
 
 class SpaceInvadersGame extends FlameGame {
   static const double gameWidth = 600;
   static const double gameHeight = 800;
+
+  late Player player;
 
   @override
   Color backgroundColor() => const Color(0xFF000000);
@@ -11,6 +14,11 @@ class SpaceInvadersGame extends FlameGame {
   @override
   Future<void> onLoad() async {
     await super.onLoad();
-    // Game initialized with fixed boundaries
+    
+    // Add player at bottom center
+    player = Player(
+      position: Vector2(gameWidth / 2, gameHeight - 50),
+    );
+    await add(player);
   }
 }
