@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import '../components/player.dart';
 import '../components/enemy_fleet.dart';
 import '../components/hud.dart';
+import '../components/shield.dart';
 
 enum GameState { start, playing, paused, gameOver, victory }
 
@@ -41,7 +42,22 @@ class SpaceInvadersGame extends FlameGame with HasCollisionDetection {
     hud = HUD();
     await add(hud);
 
+    // Add shields
+    _addShields();
+
     overlays.add('start');
+  }
+
+  void _addShields() {
+    const shieldY = gameHeight - 200;
+    const spacing = gameWidth / 5;
+    
+    for (int i = 1; i <= 4; i++) {
+      final shield = Shield(
+        position: Vector2(spacing * i, shieldY),
+      );
+      add(shield);
+    }
   }
 
   @override
