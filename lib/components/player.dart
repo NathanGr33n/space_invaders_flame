@@ -11,12 +11,17 @@ class Player extends PositionComponent
   static const double playerWidth = 40.0;
   static const double playerHeight = 30.0;
   static const double shootCooldown = 0.3;
+  static const double invulnerabilityDuration = 2.0;
 
   late Vector2 _velocity;
+  final Vector2 _startPosition;
   double _timeSinceLastShot = 0;
+  bool isInvulnerable = false;
+  double _invulnerabilityTimer = 0;
 
   Player({required Vector2 position})
-      : super(
+      : _startPosition = position.clone(),
+        super(
           position: position,
           size: Vector2(playerWidth, playerHeight),
           anchor: Anchor.center,
@@ -47,11 +52,25 @@ class Player extends PositionComponent
 
     // Update shoot cooldown
     _timeSinceLastShot += dt;
+
+    // Update invulnerability
+    if (isInvulnerable) {
+      _invulnerabilityTimer += dt;
+      if (_invulnerabilityTimer >= invulnerabilityDuration) {
+        isInvulnerable = false;
+        _invulnerabilityTimer = 0;
+      }
+    }
   }
 
   @override
   void render(Canvas canvas) {
     super.render(canvas);
+    
+    // Flicker during invulnerability
+    if (isInvulnerable && (_invulnerabilityTimer * 10).toInt() % 2 == 0) {
+      return;
+    }
     
     // Draw simple player ship shape
     final paint = Paint()..color = Colors.green;
@@ -100,5 +119,17 @@ class Player extends PositionComponent
     }
 
     return true;
+  }
+
+  void respawn() {
+    position = _startPosition.clone();
+    isInvulnerable = true;
+    _invulnerabilityTimer = 0;
+  }
+
+  void takeDamage() {
+    if (!isInvulnerable) {
+      gameRef.playerHit();
+    }
   }
 }
