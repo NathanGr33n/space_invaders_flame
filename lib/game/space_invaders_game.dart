@@ -1,6 +1,7 @@
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import '../components/player.dart';
+import '../components/enemy.dart';
 
 class SpaceInvadersGame extends FlameGame {
   static const double gameWidth = 600;
@@ -20,5 +21,11 @@ class SpaceInvadersGame extends FlameGame {
       position: Vector2(gameWidth / 2, gameHeight - 50),
     );
     await add(player);
+
+    // Add test enemy
+    final testEnemy = Enemy(
+      position: Vector2(gameWidth / 2, 100),
+    );
+    await add(testEnemy);
   }
 }
