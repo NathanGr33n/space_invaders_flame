@@ -70,6 +70,7 @@ class Bullet extends PositionComponent
       // Player bullet hit enemy
       removeFromParent();
       other.removeFromParent();
+      gameRef.addScore(SpaceInvadersGame.enemyPoints);
     } else if (!isPlayerBullet && other is Player) {
       // Enemy bullet hit player
       removeFromParent();
