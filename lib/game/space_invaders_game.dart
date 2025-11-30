@@ -1,13 +1,14 @@
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import '../components/player.dart';
-import '../components/enemy.dart';
+import '../components/enemy_fleet.dart';
 
 class SpaceInvadersGame extends FlameGame {
   static const double gameWidth = 600;
   static const double gameHeight = 800;
 
   late Player player;
+  late EnemyFleet enemyFleet;
 
   @override
   Color backgroundColor() => const Color(0xFF000000);
@@ -22,10 +23,8 @@ class SpaceInvadersGame extends FlameGame {
     );
     await add(player);
 
-    // Add test enemy
-    final testEnemy = Enemy(
-      position: Vector2(gameWidth / 2, 100),
-    );
-    await add(testEnemy);
+    // Add enemy fleet
+    enemyFleet = EnemyFleet();
+    await add(enemyFleet);
   }
 }
