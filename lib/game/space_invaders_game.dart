@@ -6,9 +6,12 @@ import '../components/enemy_fleet.dart';
 class SpaceInvadersGame extends FlameGame with HasCollisionDetection {
   static const double gameWidth = 600;
   static const double gameHeight = 800;
+  static const int maxLives = 3;
 
   late Player player;
   late EnemyFleet enemyFleet;
+  int lives = maxLives;
+  bool isGameOver = false;
 
   @override
   Color backgroundColor() => const Color(0xFF000000);
@@ -26,5 +29,19 @@ class SpaceInvadersGame extends FlameGame with HasCollisionDetection {
     // Add enemy fleet
     enemyFleet = EnemyFleet();
     await add(enemyFleet);
+  }
+
+  void playerHit() {
+    if (isGameOver) return;
+
+    lives--;
+    
+    if (lives <= 0) {
+      isGameOver = true;
+      // Game over will be handled by game states feature
+    } else {
+      // Respawn player
+      player.respawn();
+    }
   }
 }

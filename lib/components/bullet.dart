@@ -73,7 +73,7 @@ class Bullet extends PositionComponent
     } else if (!isPlayerBullet && other is Player) {
       // Enemy bullet hit player
       removeFromParent();
-      // Player damage will be handled later with lives system
+      other.takeDamage();
     }
   }
 }
