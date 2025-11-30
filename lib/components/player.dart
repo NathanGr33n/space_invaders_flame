@@ -40,27 +40,30 @@ class Player extends PositionComponent
   @override
   void update(double dt) {
     super.update(dt);
+    
+    // Only update during gameplay
+    if (gameRef.gameState == GameState.playing) {
+      // Apply velocity
+      position += _velocity * dt;
 
-    // Apply velocity
-    position += _velocity * dt;
+      // Keep player within bounds
+      final halfWidth = size.x / 2;
+      if (position.x < halfWidth) {
+        position.x = halfWidth;
+      } else if (position.x > SpaceInvadersGame.gameWidth - halfWidth) {
+        position.x = SpaceInvadersGame.gameWidth - halfWidth;
+      }
 
-    // Keep player within bounds
-    final halfWidth = size.x / 2;
-    if (position.x < halfWidth) {
-      position.x = halfWidth;
-    } else if (position.x > SpaceInvadersGame.gameWidth - halfWidth) {
-      position.x = SpaceInvadersGame.gameWidth - halfWidth;
-    }
+      // Update shoot cooldown
+      _timeSinceLastShot += dt;
 
-    // Update shoot cooldown
-    _timeSinceLastShot += dt;
-
-    // Update invulnerability
-    if (isInvulnerable) {
-      _invulnerabilityTimer += dt;
-      if (_invulnerabilityTimer >= invulnerabilityDuration) {
-        isInvulnerable = false;
-        _invulnerabilityTimer = 0;
+      // Update invulnerability
+      if (isInvulnerable) {
+        _invulnerabilityTimer += dt;
+        if (_invulnerabilityTimer >= invulnerabilityDuration) {
+          isInvulnerable = false;
+          _invulnerabilityTimer = 0;
+        }
       }
     }
   }

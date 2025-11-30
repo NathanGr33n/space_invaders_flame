@@ -1,3 +1,4 @@
+import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
@@ -28,6 +29,11 @@ class SpaceInvadersGame extends FlameGame with HasCollisionDetection, KeyboardEv
   @override
   Future<void> onLoad() async {
     await super.onLoad();
+    
+    // Set up camera with fixed resolution that scales to window
+    camera.viewfinder.visibleGameSize = Vector2(gameWidth, gameHeight);
+    camera.viewfinder.position = Vector2(gameWidth / 2, gameHeight / 2);
+    camera.viewfinder.anchor = Anchor.center;
     
     // Add player at bottom center
     player = Player(
