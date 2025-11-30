@@ -32,6 +32,8 @@ class Player extends PositionComponent
     await super.onLoad();
     _velocity = Vector2.zero();
     _timeSinceLastShot = shootCooldown;
+    isInvulnerable = false;
+    _invulnerabilityTimer = 0;
     add(RectangleHitbox());
   }
 

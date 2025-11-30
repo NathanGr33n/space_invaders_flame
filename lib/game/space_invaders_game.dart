@@ -47,6 +47,7 @@ class SpaceInvadersGame extends FlameGame with HasCollisionDetection, KeyboardEv
     _addShields();
 
     overlays.add('start');
+    pauseEngine();
   }
 
   void _addShields() {
