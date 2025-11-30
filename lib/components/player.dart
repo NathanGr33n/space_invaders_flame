@@ -75,7 +75,9 @@ class Player extends PositionComponent
     }
     
     // Draw simple player ship shape
-    final paint = Paint()..color = Colors.green;
+    final paint = Paint()
+      ..color = Colors.green
+      ..style = PaintingStyle.fill;
     
     final path = Path()
       ..moveTo(size.x / 2, 0) // Top center
@@ -84,6 +86,13 @@ class Player extends PositionComponent
       ..close();
 
     canvas.drawPath(path, paint);
+    
+    // Debug: Draw a bright rectangle to ensure player is visible
+    final debugPaint = Paint()
+      ..color = Colors.yellow
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 2;
+    canvas.drawRect(Rect.fromLTWH(0, 0, size.x, size.y), debugPaint);
   }
 
   void shoot() {
@@ -99,6 +108,12 @@ class Player extends PositionComponent
 
   @override
   bool onKeyEvent(KeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
+    // Only handle input during gameplay
+    if (gameRef.gameState != GameState.playing) {
+      _velocity.x = 0;
+      return false;
+    }
+    
     _velocity.x = 0;
 
     if (keysPressed.contains(LogicalKeyboardKey.arrowLeft) ||

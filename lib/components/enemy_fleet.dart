@@ -50,6 +50,9 @@ class EnemyFleet extends Component with HasGameRef<SpaceInvadersGame> {
     super.update(dt);
 
     if (children.isEmpty) return;
+    
+    // Only move and shoot during gameplay
+    if (gameRef.gameState != GameState.playing) return;
 
     // Move all enemies horizontally
     for (final child in children) {
