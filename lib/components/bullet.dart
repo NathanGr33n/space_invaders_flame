@@ -1,8 +1,12 @@
+import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
 import '../game/space_invaders_game.dart';
+import 'enemy.dart';
+import 'player.dart';
 
-class Bullet extends PositionComponent with HasGameRef<SpaceInvadersGame> {
+class Bullet extends PositionComponent
+    with HasGameRef<SpaceInvadersGame>, CollisionCallbacks {
   static const double speed = 400.0;
   static const double bulletWidth = 4.0;
   static const double bulletHeight = 12.0;
@@ -17,6 +21,12 @@ class Bullet extends PositionComponent with HasGameRef<SpaceInvadersGame> {
           size: Vector2(bulletWidth, bulletHeight),
           anchor: Anchor.center,
         );
+
+  @override
+  Future<void> onLoad() async {
+    await super.onLoad();
+    add(RectangleHitbox());
+  }
 
   @override
   void update(double dt) {
@@ -47,5 +57,23 @@ class Bullet extends PositionComponent with HasGameRef<SpaceInvadersGame> {
       Rect.fromLTWH(0, 0, size.x, size.y),
       paint,
     );
+  }
+
+  @override
+  void onCollisionStart(
+    Set<Vector2> intersectionPoints,
+    PositionComponent other,
+  ) {
+    super.onCollisionStart(intersectionPoints, other);
+
+    if (isPlayerBullet && other is Enemy) {
+      // Player bullet hit enemy
+      removeFromParent();
+      other.removeFromParent();
+    } else if (!isPlayerBullet && other is Player) {
+      // Enemy bullet hit player
+      removeFromParent();
+      // Player damage will be handled later with lives system
+    }
   }
 }
