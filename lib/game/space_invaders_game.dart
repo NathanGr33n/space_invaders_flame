@@ -2,15 +2,19 @@ import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import '../components/player.dart';
 import '../components/enemy_fleet.dart';
+import '../components/hud.dart';
 
 class SpaceInvadersGame extends FlameGame with HasCollisionDetection {
   static const double gameWidth = 600;
   static const double gameHeight = 800;
   static const int maxLives = 3;
+  static const int enemyPoints = 10;
 
   late Player player;
   late EnemyFleet enemyFleet;
+  late HUD hud;
   int lives = maxLives;
+  int score = 0;
   bool isGameOver = false;
 
   @override
@@ -29,6 +33,10 @@ class SpaceInvadersGame extends FlameGame with HasCollisionDetection {
     // Add enemy fleet
     enemyFleet = EnemyFleet();
     await add(enemyFleet);
+
+    // Add HUD
+    hud = HUD();
+    await add(hud);
   }
 
   void playerHit() {
@@ -43,5 +51,9 @@ class SpaceInvadersGame extends FlameGame with HasCollisionDetection {
       // Respawn player
       player.respawn();
     }
+  }
+
+  void addScore(int points) {
+    score += points;
   }
 }
