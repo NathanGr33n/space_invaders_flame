@@ -1,3 +1,4 @@
+import 'package:flame/events.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -8,7 +9,7 @@ import '../components/shield.dart';
 
 enum GameState { start, playing, paused, gameOver, victory }
 
-class SpaceInvadersGame extends FlameGame with HasCollisionDetection {
+class SpaceInvadersGame extends FlameGame with HasCollisionDetection, KeyboardEvents {
   static const double gameWidth = 600;
   static const double gameHeight = 800;
   static const int maxLives = 3;
@@ -73,6 +74,7 @@ class SpaceInvadersGame extends FlameGame with HasCollisionDetection {
     }
   }
 
+  @override
   KeyEventResult onKeyEvent(
     KeyEvent event,
     Set<LogicalKeyboardKey> keysPressed,
