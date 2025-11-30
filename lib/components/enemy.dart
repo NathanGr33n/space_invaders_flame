@@ -1,8 +1,10 @@
+import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
 import '../game/space_invaders_game.dart';
 
-class Enemy extends PositionComponent with HasGameRef<SpaceInvadersGame> {
+class Enemy extends PositionComponent
+    with HasGameRef<SpaceInvadersGame>, CollisionCallbacks {
   static const double enemyWidth = 35.0;
   static const double enemyHeight = 25.0;
 
@@ -12,6 +14,12 @@ class Enemy extends PositionComponent with HasGameRef<SpaceInvadersGame> {
           size: Vector2(enemyWidth, enemyHeight),
           anchor: Anchor.center,
         );
+
+  @override
+  Future<void> onLoad() async {
+    await super.onLoad();
+    add(RectangleHitbox());
+  }
 
   @override
   void render(Canvas canvas) {

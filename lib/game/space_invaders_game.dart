@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../components/player.dart';
 import '../components/enemy_fleet.dart';
 
-class SpaceInvadersGame extends FlameGame {
+class SpaceInvadersGame extends FlameGame with HasCollisionDetection {
   static const double gameWidth = 600;
   static const double gameHeight = 800;
 

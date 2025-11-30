@@ -1,3 +1,4 @@
+import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
@@ -5,7 +6,7 @@ import '../game/space_invaders_game.dart';
 import 'bullet.dart';
 
 class Player extends PositionComponent
-    with HasGameRef<SpaceInvadersGame>, KeyboardHandler {
+    with HasGameRef<SpaceInvadersGame>, KeyboardHandler, CollisionCallbacks {
   static const double speed = 300.0;
   static const double playerWidth = 40.0;
   static const double playerHeight = 30.0;
@@ -26,6 +27,7 @@ class Player extends PositionComponent
     await super.onLoad();
     _velocity = Vector2.zero();
     _timeSinceLastShot = shootCooldown;
+    add(RectangleHitbox());
   }
 
   @override
