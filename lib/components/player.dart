@@ -111,6 +111,9 @@ class Player extends PositionComponent
 
   @override
   bool onKeyEvent(KeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
+    // Debug: print game state
+    print('Player onKeyEvent - gameState: ${gameRef.gameState}');
+    
     // Only handle input during gameplay
     if (gameRef.gameState != GameState.playing) {
       _velocity.x = 0;
@@ -122,11 +125,13 @@ class Player extends PositionComponent
     if (keysPressed.contains(LogicalKeyboardKey.arrowLeft) ||
         keysPressed.contains(LogicalKeyboardKey.keyA)) {
       _velocity.x = -speed;
+      print('Player moving LEFT');
     }
 
     if (keysPressed.contains(LogicalKeyboardKey.arrowRight) ||
         keysPressed.contains(LogicalKeyboardKey.keyD)) {
       _velocity.x = speed;
+      print('Player moving RIGHT');
     }
 
     // Shoot with Space or W/Up Arrow

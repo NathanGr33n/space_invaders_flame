@@ -17,14 +17,21 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.black),
         useMaterial3: true,
       ),
-      home: GameWidget(
-        game: SpaceInvadersGame(),
-        overlayBuilderMap: {
-          'start': (context, game) => _buildStartOverlay(context),
-          'paused': (context, game) => _buildPausedOverlay(context),
-          'gameOver': (context, game) => _buildGameOverOverlay(context, game as SpaceInvadersGame),
-          'victory': (context, game) => _buildVictoryOverlay(context, game as SpaceInvadersGame),
-        },
+      home: Scaffold(
+        body: Center(
+          child: AspectRatio(
+            aspectRatio: SpaceInvadersGame.gameWidth / SpaceInvadersGame.gameHeight,
+            child: GameWidget(
+              game: SpaceInvadersGame(),
+              overlayBuilderMap: {
+                'start': (context, game) => _buildStartOverlay(context),
+                'paused': (context, game) => _buildPausedOverlay(context),
+                'gameOver': (context, game) => _buildGameOverOverlay(context, game as SpaceInvadersGame),
+                'victory': (context, game) => _buildVictoryOverlay(context, game as SpaceInvadersGame),
+              },
+            ),
+          ),
+        ),
       ),
     );
   }

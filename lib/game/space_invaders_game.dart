@@ -30,11 +30,6 @@ class SpaceInvadersGame extends FlameGame with HasCollisionDetection, KeyboardEv
   Future<void> onLoad() async {
     await super.onLoad();
     
-    // Set up camera with fixed resolution that scales to window
-    camera.viewfinder.visibleGameSize = Vector2(gameWidth, gameHeight);
-    camera.viewfinder.position = Vector2(gameWidth / 2, gameHeight / 2);
-    camera.viewfinder.anchor = Anchor.center;
-    
     // Add player at bottom center
     player = Player(
       position: Vector2(gameWidth / 2, gameHeight - 50),
@@ -136,8 +131,10 @@ class SpaceInvadersGame extends FlameGame with HasCollisionDetection, KeyboardEv
   }
 
   void startGame() {
+    print('Starting game - changing state to playing');
     gameState = GameState.playing;
     overlays.remove('start');
+    print('Game state is now: $gameState');
   }
 
   void pauseGame() {
