@@ -53,7 +53,7 @@ class SpaceInvadersGame extends FlameGame with HasCollisionDetection, KeyboardEv
     _addShields();
 
     overlays.add('start');
-    pauseEngine();
+    // Don't pause engine - just use gameState to control behavior
   }
 
   void _addShields() {
@@ -77,7 +77,6 @@ class SpaceInvadersGame extends FlameGame with HasCollisionDetection, KeyboardEv
         enemyFleet.children.isEmpty) {
       gameState = GameState.victory;
       overlays.add('victory');
-      pauseEngine();
     }
   }
 
@@ -126,7 +125,6 @@ class SpaceInvadersGame extends FlameGame with HasCollisionDetection, KeyboardEv
     if (lives <= 0) {
       gameState = GameState.gameOver;
       overlays.add('gameOver');
-      pauseEngine();
     } else {
       // Respawn player
       player.respawn();
@@ -140,19 +138,16 @@ class SpaceInvadersGame extends FlameGame with HasCollisionDetection, KeyboardEv
   void startGame() {
     gameState = GameState.playing;
     overlays.remove('start');
-    resumeEngine();
   }
 
   void pauseGame() {
     gameState = GameState.paused;
     overlays.add('paused');
-    pauseEngine();
   }
 
   void resumeGame() {
     gameState = GameState.playing;
     overlays.remove('paused');
-    resumeEngine();
   }
 
   void resetGame() {
@@ -173,7 +168,5 @@ class SpaceInvadersGame extends FlameGame with HasCollisionDetection, KeyboardEv
     
     // Reset player
     player.respawn();
-    
-    resumeEngine();
   }
 }
