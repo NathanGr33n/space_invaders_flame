@@ -79,6 +79,8 @@ class SpaceInvadersGame extends FlameGame with HasCollisionDetection, KeyboardEv
     KeyEvent event,
     Set<LogicalKeyboardKey> keysPressed,
   ) {
+    print('Game onKeyEvent - State: $gameState, Event: ${event.runtimeType}, Keys: $keysPressed');
+    
     if (event is KeyDownEvent) {
       // Start game
       if (gameState == GameState.start && 
@@ -104,6 +106,14 @@ class SpaceInvadersGame extends FlameGame with HasCollisionDetection, KeyboardEv
       if ((gameState == GameState.gameOver || gameState == GameState.victory) &&
           event.logicalKey == LogicalKeyboardKey.enter) {
         resetGame();
+        return KeyEventResult.handled;
+      }
+    }
+    
+    // During gameplay, forward keyboard events to player
+    if (gameState == GameState.playing) {
+      final result = player.onKeyEvent(event, keysPressed);
+      if (result) {
         return KeyEventResult.handled;
       }
     }
