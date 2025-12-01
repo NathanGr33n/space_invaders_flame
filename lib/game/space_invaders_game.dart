@@ -2,10 +2,13 @@ import 'package:flame/events.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:math';
 import '../components/player.dart';
 import '../components/enemy_fleet.dart';
 import '../components/hud.dart';
 import '../components/shield.dart';
+import '../components/mystery_ship.dart';
 
 enum GameState { start, playing, paused, gameOver, victory }
 
@@ -20,7 +23,14 @@ class SpaceInvadersGame extends FlameGame with HasCollisionDetection, KeyboardEv
   late HUD hud;
   int lives = maxLives;
   int score = 0;
+  int highScore = 0;
+  int currentWave = 1;
   GameState gameState = GameState.start;
+  
+  double _mysteryShipTimer = 0;
+  static const double mysteryShipInterval = 15.0; // Every 15 seconds
+  final Random _random = Random();
+  bool _isTransitioningWave = false;
 
   @override
   Color backgroundColor() => const Color(0xFF000000);
@@ -28,6 +38,9 @@ class SpaceInvadersGame extends FlameGame with HasCollisionDetection, KeyboardEv
   @override
   Future<void> onLoad() async {
     await super.onLoad();
+    
+    // Load high score
+    await _loadHighScore();
     
     // Add player at bottom center
     player = Player(
@@ -66,12 +79,32 @@ class SpaceInvadersGame extends FlameGame with HasCollisionDetection, KeyboardEv
   void update(double dt) {
     super.update(dt);
 
-    // Check victory condition
+    // Check wave completion
     if (gameState == GameState.playing && 
-        enemyFleet.children.isEmpty) {
-      gameState = GameState.victory;
-      overlays.add('victory');
+        enemyFleet.children.isEmpty && 
+        !_isTransitioningWave) {
+      _startNextWave();
     }
+
+    // Mystery ship spawning
+    if (gameState == GameState.playing) {
+      _mysteryShipTimer += dt;
+      if (_mysteryShipTimer >= mysteryShipInterval) {
+        _spawnMysteryShip();
+        _mysteryShipTimer = 0;
+      }
+    }
+  }
+
+  void _spawnMysteryShip() {
+    final fromRight = _random.nextBool();
+    final startX = fromRight ? gameWidth + 25 : -25;
+    
+    final mysteryShip = MysteryShip(
+      position: Vector2(startX, 50),
+      movingRight: !fromRight,
+    );
+    add(mysteryShip);
   }
 
   @override
@@ -137,6 +170,20 @@ class SpaceInvadersGame extends FlameGame with HasCollisionDetection, KeyboardEv
 
   void addScore(int points) {
     score += points;
+    if (score > highScore) {
+      highScore = score;
+      _saveHighScore();
+    }
+  }
+
+  Future<void> _loadHighScore() async {
+    final prefs = await SharedPreferences.getInstance();
+    highScore = prefs.getInt('high_score') ?? 0;
+  }
+
+  Future<void> _saveHighScore() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('high_score', highScore);
   }
 
   void startGame() {
@@ -163,7 +210,9 @@ class SpaceInvadersGame extends FlameGame with HasCollisionDetection, KeyboardEv
     // Reset game state
     lives = maxLives;
     score = 0;
+    currentWave = 1;
     gameState = GameState.playing;
+    _isTransitioningWave = false;
     
     // Remove all enemies
     enemyFleet.removeFromParent();
@@ -174,5 +223,24 @@ class SpaceInvadersGame extends FlameGame with HasCollisionDetection, KeyboardEv
     
     // Reset player
     player.respawn();
+  }
+
+  void _startNextWave() {
+    _isTransitioningWave = true;
+    currentWave++;
+    
+    // Show wave transition (brief delay)
+    Future.delayed(const Duration(seconds: 2), () {
+      if (gameState == GameState.playing) {
+        // Remove old fleet
+        enemyFleet.removeFromParent();
+        
+        // Create new fleet with increased difficulty
+        enemyFleet = EnemyFleet(waveMultiplier: currentWave.toDouble());
+        add(enemyFleet);
+        
+        _isTransitioningWave = false;
+      }
+    });
   }
 }

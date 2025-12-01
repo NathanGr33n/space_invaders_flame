@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import '../game/space_invaders_game.dart';
 import 'enemy.dart';
 import 'player.dart';
+import 'explosion.dart';
+import 'mystery_ship.dart';
 
 class Bullet extends PositionComponent
     with HasGameRef<SpaceInvadersGame>, CollisionCallbacks {
@@ -69,11 +71,20 @@ class Bullet extends PositionComponent
     if (isPlayerBullet && other is Enemy) {
       // Player bullet hit enemy
       removeFromParent();
+      gameRef.add(Explosion(position: other.position.clone(), color: Colors.orange));
       other.removeFromParent();
       gameRef.addScore(SpaceInvadersGame.enemyPoints);
+    } else if (isPlayerBullet && other is MysteryShip) {
+      // Player bullet hit mystery ship
+      removeFromParent();
+      gameRef.add(Explosion(position: other.position.clone(), color: Colors.purple));
+      other.destroy();
     } else if (!isPlayerBullet && other is Player) {
       // Enemy bullet hit player
       removeFromParent();
+      if (!other.isInvulnerable) {
+        gameRef.add(Explosion(position: other.position.clone(), color: Colors.green));
+      }
       other.takeDamage();
     }
   }

@@ -142,6 +142,11 @@ class MyApp extends StatelessWidget {
               'Final Score: ${game.score}',
               style: const TextStyle(color: Colors.white, fontSize: 24),
             ),
+            const SizedBox(height: 10),
+            Text(
+              'High Score: ${game.highScore}',
+              style: const TextStyle(color: Colors.yellow, fontSize: 20),
+            ),
             const SizedBox(height: 40),
             const Text(
               'Press ENTER to Restart',
@@ -179,6 +184,11 @@ class MyApp extends StatelessWidget {
             Text(
               'Final Score: ${game.score}',
               style: const TextStyle(color: Colors.white, fontSize: 24),
+            ),
+            const SizedBox(height: 10),
+            Text(
+              'High Score: ${game.highScore}',
+              style: const TextStyle(color: Colors.yellow, fontSize: 20),
             ),
             const SizedBox(height: 40),
             const Text(
